@@ -1,0 +1,13 @@
+{
+  "name": "Project",
+  "type" : "module",
+  "version": "1.0.0",
+  "description": "vuongdev mern stack",
+  "main": "src/server.js",
+  "author": "vuongDev",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
