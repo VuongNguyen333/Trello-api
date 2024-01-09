@@ -1,4 +1,8 @@
+/* eslint-disable no-console */
+/* eslint-disable no-unreachable */
 import Joi from 'joi'
+import { GET_DB } from '~/config/mongodb'
+import { ObjectId } from 'mongodb'
 import { OBJECT_ID_RULE, OBJECT_ID_RULE_MESSAGE } from '~/utils/validators'
 
 // Define Collection (name & schema)
@@ -15,7 +19,40 @@ const CARD_COLLECTION_SCHEMA = Joi.object({
   _destroy: Joi.boolean().default(false)
 })
 
+const validateBeforeCreate = async (data) => {
+  return await CARD_COLLECTION_SCHEMA.validateAsync(data, { abortEarly: false })
+}
+
+const createNew = async (data) => {
+  try {
+    const validData = await validateBeforeCreate(data)
+    const createdCard = await GET_DB().collection(CARD_COLLECTION_NAME).insertOne({
+      ...validData,
+      boardId: new ObjectId(validData.boardId),
+      columnId: new ObjectId(validData.columnId)
+    })
+    return createdCard
+  } catch (error) { throw new Error(error) }
+}
+
+const findOneById = async (cardId) => {
+  try {
+    return await GET_DB().collection(CARD_COLLECTION_NAME).findOne({ _id: new ObjectId(cardId) })
+  } catch (error) { throw new Error(error) }
+}
+
+const deleteManyByColumnId = async (columnId) => {
+  try {
+    console.log('🚀 ~ file: card.js:45 ~ deleteManyByColumnId ~ columnId:', columnId)
+    return await GET_DB().collection(CARD_COLLECTION_NAME).deleteMany({ columnId: new ObjectId(columnId) })
+  } catch (error) { throw new Error(error) }
+}
+
+
 export const cardModel = {
   CARD_COLLECTION_NAME,
-  CARD_COLLECTION_SCHEMA
+  CARD_COLLECTION_SCHEMA,
+  createNew,
+  findOneById,
+  deleteManyByColumnId
 }
