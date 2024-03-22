@@ -3,6 +3,8 @@ import { boardModel } from '~/models/board'
 import ApiError from '~/utils/ApiError'
 import { StatusCodes } from 'http-status-codes'
 import { cloneDeep } from 'lodash'
+import { columnModel } from '~/models/column'
+import { cardModel } from '~/models/card'
 
 const createNew = async (reqBody) => {
   try {
@@ -47,8 +49,23 @@ const update = async (boardId, reqBody) => {
   } catch (error) { throw error }
 }
 
+const moveCardToDiffColumn = async (reqBody) => {
+  try {
+    // B1: cap nhat activeCardOrderIds
+    await columnModel.update(reqBody.prevColumnId, { cardOrderIds: reqBody.prevCardOrderIds, updatedAt: Date.now() })
+    // B2: cap nhat overCardOrderIds
+    await columnModel.update(reqBody.nextColumnId, { cardOrderIds: reqBody.nextCardOrderIds, updatedAt: Date.now() })
+    // B3: cap nhat lai columnId cua activeCard
+    await cardModel.update(reqBody.currentCardId, {
+      columnId: reqBody.nextColumnId
+    })
+    return { updatedResult: 'Successfully' }
+  } catch (error) { throw error }
+}
+
 export const boardService = {
   createNew,
   getDetail,
-  update
+  update,
+  moveCardToDiffColumn
 }

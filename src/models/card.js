@@ -4,6 +4,7 @@ import Joi from 'joi'
 import { GET_DB } from '~/config/mongodb'
 import { ObjectId } from 'mongodb'
 import { OBJECT_ID_RULE, OBJECT_ID_RULE_MESSAGE } from '~/utils/validators'
+const INVALID_UPDATE_FIELD = ['_id', 'boardId', 'createdAt']
 
 // Define Collection (name & schema)
 const CARD_COLLECTION_NAME = 'cards'
@@ -48,11 +49,32 @@ const deleteManyByColumnId = async (columnId) => {
   } catch (error) { throw new Error(error) }
 }
 
+const update = async (cardId, updateData) => {
+  try {
+    //Loc. field khong cho phep cap nhat linh tinh
+    Object.keys(updateData).forEach(fieldName => {
+      if (INVALID_UPDATE_FIELD.includes(fieldName)) {
+        delete updateData[fieldName]
+      }
+    })
+    if (updateData.columnId) {
+      updateData.columnId = new ObjectId(updateData.columnId)
+    }
+    const res = await GET_DB().collection(CARD_COLLECTION_NAME).findOneAndUpdate(
+      { _id: new ObjectId(cardId) },
+      { $set: updateData },
+      { returnDocument: 'after' }
+    )
+    return res
+  } catch (error) { throw new Error(error) }
+}
+
 
 export const cardModel = {
   CARD_COLLECTION_NAME,
   CARD_COLLECTION_SCHEMA,
   createNew,
   findOneById,
-  deleteManyByColumnId
+  deleteManyByColumnId,
+  update
 }
