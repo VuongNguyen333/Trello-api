@@ -20,7 +20,6 @@ const createNew = async (req, res, next) => {
     // console.log(error)
     next(new ApiError(StatusCodes.UNPROCESSABLE_ENTITY, new Error(error).message))
   }
-
 }
 
 const update = async (req, res, next) => {
@@ -31,7 +30,7 @@ const update = async (req, res, next) => {
   })
   try {
     //Doi voi update, cho phep Unknown de khong day 1 so field len
-    await correctCondition.validateAsync(req.body, { 
+    await correctCondition.validateAsync(req.body, {
       abortEarly: false,
       allowUnknown: true
     })

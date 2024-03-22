@@ -62,7 +62,7 @@ const getDetail = async (boardId) => {
         as: 'cards'
       } }
     ]).toArray()
-    return res[0] || {}
+    return res[0]
   } catch (error) { throw new Error(error) }
 }
 
@@ -74,7 +74,7 @@ const pushColumnOrderIds = async (column) => {
       { returnDocument: 'after' }
     )
 
-    return res || null
+    return res
   } catch (error) { throw new Error(error) }
 }
 
@@ -86,7 +86,7 @@ const pullColumnOrderIds = async (column) => {
       { returnDocument: 'after' }
     )
 
-    return res || null
+    return res
   } catch (error) { throw new Error(error) }
 }
 
@@ -104,7 +104,7 @@ const update = async (boardId, updateData) => {
       { returnDocument: 'after' }
     )
 
-    return res || null
+    return res
   } catch (error) { throw new Error(error) }
 }
 
