@@ -72,7 +72,7 @@ const update = async (columnId, updateData) => {
       { returnDocument: 'after' }
     )
 
-    return res || null
+    return res
   } catch (error) { throw new Error(error) }
 }
 
