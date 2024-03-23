@@ -44,7 +44,7 @@ const findOneById = async (cardId) => {
 
 const deleteManyByColumnId = async (columnId) => {
   try {
-    console.log('🚀 ~ file: card.js:45 ~ deleteManyByColumnId ~ columnId:', columnId)
+    // console.log('🚀 ~ file: card.js:45 ~ deleteManyByColumnId ~ columnId:', columnId)
     return await GET_DB().collection(CARD_COLLECTION_NAME).deleteMany({ columnId: new ObjectId(columnId) })
   } catch (error) { throw new Error(error) }
 }
