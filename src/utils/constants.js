@@ -1,7 +1,8 @@
 
 
 export const WHITELIST_DOMAINS = [
-  'http://localhost:5173'
+  // khong can vi moi truong dev la cho qua
+  // 'http://localhost:5173'
 ]
 
 export const BOARD_TYPES = {
